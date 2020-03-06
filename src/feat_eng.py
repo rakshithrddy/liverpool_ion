@@ -1,14 +1,17 @@
-import os
 import gc
-import pandas as pd
-import numpy as np
-from tqdm import tqdm
+import os
+
 import joblib
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
+
+
+def f_train(x, low, high, mid):
+    return -((-low + high) / 625) * (x - mid) ** 2 + high - low
 
 
 def remove_drift_train(train):
-    def f_train(x, low, high, mid):
-        return -((-low + high) / 625) * (x - mid) ** 2 + high - low
     a = 500000
     b = 600000
     train.loc[train.index[a:b], 'signal'] = train['signal'][a:b].values - 3 * (
@@ -28,9 +31,11 @@ def remove_drift_train(train):
     return train
 
 
+def f_test(x):
+    return -(0.00788) * (x - 625) ** 2 + 2.345 + 2.58
+
+
 def remove_drift_test(test):
-    def f_test(x):
-        return -(0.00788) * (x - 625) ** 2 + 2.345 + 2.58
     start = 500
     a = 0
     b = 100000
