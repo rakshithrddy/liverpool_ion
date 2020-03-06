@@ -1,9 +1,11 @@
-import joblib
-import pandas as pd
-from . import dispatcher
-import numpy as np
-import os
 import gc
+import os
+
+import joblib
+import numpy as np
+import pandas as pd
+
+from . import dispatcher
 
 
 class Submission:
@@ -38,7 +40,7 @@ class Submission:
                           self.xgb_factor * self.preds_xgb + \
                           self.cat_factor * self.preds_cat
             submission = pd.read_csv("../inputs/sample_submission.csv")
-            submission[[self.target_columns]] = np.round(np.clip(final_preds, 0, 10)).astype(int)
+            submission[self.target_columns] = np.round(np.clip(final_preds, 0, 10)).astype(int)
             print('dumping the final submissions into output')
             submission.to_csv('../outputs/submission.csv', index=False, float_format='%.4f')
         else:
